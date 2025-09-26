@@ -12,6 +12,7 @@ from noise import add_noise2frames
 import imageio, os
 import json
 from tqdm import tqdm
+import argparse
 
 
 # Hyper parameters
@@ -264,6 +265,10 @@ def generate_single_video_wrapper(args):
     )
 
 if __name__ == "__main__":
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--out_dir', type=str, default="./" help='Output directory')
+    args = parser.parse_args()
+    
     # Set global seeds for reproducibility
     np.random.seed(SEED)
     random.seed(SEED)
@@ -308,16 +313,16 @@ if __name__ == "__main__":
     tasks = [
         # ('train', 1, 100),  # phase, start_index, video_num
         ('train', 1, 10000),  # phase, start_index, video_num
-        ('val', 10001, 500),
-        ('test', 12001, 2000),
+        ('val', 100001, 500),
+        ('test',200001, 2000),
     ]
 
     for phase, start_index, num_videos in tasks:
         args_list = [
-            (data_dict[phase], GEN_VIDEO_FPS, f"{OUT_DIR}/{phase}/video_{(i+start_index):07d}.mp4", i) 
+            (data_dict[phase], GEN_VIDEO_FPS, f"{args.out_dir}/{phase}/video_{(i+start_index):07d}.mp4", i) 
             for i in range(num_videos)
         ]
-        os.makedirs(f"{OUT_DIR}/{phase}", exist_ok=True)
+        os.makedirs(f"{args.out_dir}/{phase}", exist_ok=True)
         print(f"Generating {num_videos} videos using {mp.cpu_count()} processes...")
         
         with mp.Pool(processes=min(10, mp.cpu_count())) as pool:
