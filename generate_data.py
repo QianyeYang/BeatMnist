@@ -266,7 +266,7 @@ def generate_single_video_wrapper(args):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('--out_dir', type=str, default="./" help='Output directory')
+    parser.add_argument('--out_dir', type=str, default="./", help='Output directory')
     args = parser.parse_args()
     
     # Set global seeds for reproducibility
